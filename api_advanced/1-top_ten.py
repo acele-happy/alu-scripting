@@ -1,18 +1,24 @@
 #!/usr/bin/python3
-"""DOCS"""
+"""Script that fetch 10 hot post for a given subreddit."""
 import requests
 
 
 def top_ten(subreddit):
-    """Docs"""
-    reddit_url = "https://www.reddit.com/r/{}/hot.json" \
-        .format(subreddit)
-    headers = headers = {'User-agent': 'Mozilla/5.0'}
-    response = requests.get(reddit_url, headers=headers)
+    """Return number of subscribers if @subreddit is valid subreddit.
+    if not return 0."""
+
+    headers = {
+        'User-Agent': 'python:alx_topten:v1.0 (by JeanPhilippe2025)'
+    }
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    response = requests.get(url, headers=headers, allow_redirects=False)
 
     if response.status_code == 200:
-        data = response.json()['data']
-        for post in data['children'][:10]:
-            print(post['data']['title'])
+        json_data = response.json()
+        posts = json_data.get('data', {}).get('children', [])
+        for i in range(min(10, len(posts))):
+            print(posts[i].get('data', {}).get('title'), end="")
+        # print("OK", end=None)
     else:
-        print(None)
+        # print("OK", end="")
+        print("None")
